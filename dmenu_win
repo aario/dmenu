@@ -1,2 +1,2 @@
 #!/bin/bash
-wmctrl -l | cut -d ' ' -f5- | dmenu -i | xargs -I {} -i wmctrl -a "{}"
+wmctrl -l | cut -d ' ' -f5- | dmenu -i $@ | xargs -I {} -i wmctrl -a "{}"
