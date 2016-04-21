@@ -2,6 +2,14 @@ dmenu - dynamic menu
 ====================
 dmenu is an efficient dynamic menu for X.
 
+Main Source
+-----------
+This is a fork of dmenu - suckless project at:
+    http://git.suckless.org/dmenu
+
+Added Features
+--------------
+* dmenu_win    Displays a list of window titles instead of commands and then switches to selected window
 
 Requirements
 ------------
@@ -23,8 +31,3 @@ Afterwards enter the following command to build and install dmenu
 Running dmenu
 -------------
 See the man page for details.
-
-Main Source
------------
-This is a fork of dmenu - suckless project at:
-    http://git.suckless.org/dmenu
