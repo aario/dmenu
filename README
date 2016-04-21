@@ -23,3 +23,8 @@ Afterwards enter the following command to build and install dmenu
 Running dmenu
 -------------
 See the man page for details.
+
+Main Source
+-----------
+This is a fork of dmenu - suckless project at:
+    http://git.suckless.org/dmenu
