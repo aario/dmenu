@@ -1,2 +1,2 @@
 #!/bin/bash
-wmctrl -l | cut -d ' ' -f5- | dmenu -i $@ | xargs -I {} -i wmctrl -a "{}"
+hostnamec=`hostname | wc -c`; let "column=14+$hostnamec"; wmctrl -l | colrm 1 $column | dmenu -i $@ | xargs -I {} -i wmctrl -a "{}"
