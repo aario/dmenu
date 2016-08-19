@@ -1,1 +1,2 @@
+#!/bin/bash
 { echo "0%"; for i in {1..10}; do echo $i"0%"; done } | dmenu -l 0 -p "VOL:" "$@" | xargs amixer set Master
