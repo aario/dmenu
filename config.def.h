@@ -7,14 +7,21 @@ static const char *fonts[] = {
 	"monospace:size=10"
 };
 static const char *prompt      = NULL;      /* -p  option; prompt to the left of input field */
-static const char *normbgcolor = "#222222"; /* -nb option; normal background                 */
-static const char *normfgcolor = "#bbbbbb"; /* -nf option; normal foreground                 */
-static const char *selbgcolor  = "#005577"; /* -sb option; selected background               */
-static const char *selfgcolor  = "#eeeeee"; /* -sf option; selected foreground               */
+static const char *firstbgcolor = "#000000"; /* -fb option; normal background for the first line */
+static const char *firstfgcolor = "#eeeeee"; /* -ff option; normal foreground for the first line */
+static const char *normbgcolor = "#009090"; /* -nb option; normal background                 */
+static const char *normfgcolor = "#000000"; /* -nf option; normal foreground                 */
+static const char *selbgcolor  = "#003355"; /* -sb option; selected background               */
+static const char *selfgcolor  = "#ffffff"; /* -sf option; selected foreground               */
 static const char *outbgcolor  = "#00ffff";
 static const char *outfgcolor  = "#000000";
 /* -l option; if nonzero, dmenu uses vertical list with given number of lines */
 static unsigned int lines      = 10;
+/* intensity of blur level*/
+static unsigned int blurlevel  = 20;
+
+//Used for multi-threaded blur effect
+#define CPU_THREADS 4 
 
 /*
  * Characters not considered part of a word while deleting words
