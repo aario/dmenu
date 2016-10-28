@@ -32,9 +32,11 @@ typedef struct {
 	Window root;
 	Drawable drawable;
 	GC gc;
+	ClrScheme *scheme0;
 	ClrScheme *scheme;
 	size_t fontcount;
 	Fnt *fonts[DRW_FONT_CACHE_SIZE];
+	XImage *screenshot;
 } Drw;
 
 typedef struct {
@@ -42,10 +44,14 @@ typedef struct {
 	unsigned int h;
 } Extnts;
 
+void drw_bluriamge (XImage *image, int radius, unsigned int cpu_threads);
+void drw_blurrect(Drw *drw, int x, int y, unsigned int w, unsigned int h, unsigned long tint, unsigned int num_threads);
+
 /* Drawable abstraction */
 Drw *drw_create(Display *, int, Window, unsigned int, unsigned int);
 void drw_resize(Drw *, unsigned int, unsigned int);
 void drw_free(Drw *);
+void drw_takesblurcreenshot(Drw *drw, int x, int y, unsigned int w, unsigned int h, int blurlevel, unsigned int num_threads);
 
 /* Fnt abstraction */
 Fnt *drw_font_create(Drw *, const char *);
@@ -67,8 +73,8 @@ void drw_setfont(Drw *, Fnt *);
 void drw_setscheme(Drw *, ClrScheme *);
 
 /* Drawing functions */
-void drw_rect(Drw *, int, int, unsigned int, unsigned int, int, int, int);
-int drw_text(Drw *, int, int, unsigned int, unsigned int, const char *, int);
+void drw_rect(Drw *drw, int x, int y, unsigned int w, unsigned int h, int filled, int empty, int invert, unsigned int num_threads);
+int drw_text(Drw *, int, int, unsigned int, unsigned int, const char *, int, unsigned int);
 
 /* Map functions */
 void drw_map(Drw *, Window, int, int, unsigned int, unsigned int);

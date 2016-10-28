@@ -14,6 +14,10 @@ dmenu \- dynamic menu
 .IR prompt ]
 .RB [ \-fn
 .IR font ]
+.RB [ \-fb
+.IR color ]
+.RB [ \-ff
+.IR color ]
 .RB [ \-nb
 .IR color ]
 .RB [ \-nf
@@ -60,6 +64,15 @@ defines the prompt to be displayed to the left of the input field.
 .TP
 .BI \-fn " font"
 defines the font or font set used.
+.TP
+.BI \-fb " color"
+defines the first line background color.
+.IR #RGB ,
+.IR #RRGGBB ,
+and X color names are supported.
+.TP
+.BI \-ff " color"
+defines the first line foreground color.
 .TP
 .BI \-nb " color"
 defines the normal background color.

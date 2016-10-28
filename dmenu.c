@@ -23,10 +23,10 @@
                              * MAX(0, MIN((y)+(h),(r).y_org+(r).height) - MAX((y),(r).y_org)))
 #define LENGTH(X)             (sizeof X / sizeof X[0])
 #define TEXTNW(X,N)           (drw_font_getexts_width(drw->fonts[0], (X), (N)))
-#define TEXTW(X)              (drw_text(drw, 0, 0, 0, 0, (X), 0) + drw->fonts[0]->h)
+#define TEXTW(X)              (drw_text(drw, 0, 0, 0, 0, (X), 0, CPU_THREADS) + drw->fonts[0]->h)
 
 /* enums */
-enum { SchemeNorm, SchemeSel, SchemeOut, SchemeLast }; /* color schemes */
+enum { SchemeFirst, SchemeNorm, SchemeSel, SchemeOut, SchemeLast }; /* color schemes */
 
 struct item {
 	char *text;
@@ -122,21 +122,21 @@ drawmenu(void)
 	int x = 0, y = 0, h = bh, w;
 
 	drw_setscheme(drw, &scheme[SchemeNorm]);
-	drw_rect(drw, 0, 0, mw, mh, 1, 1, 1);
+	drw_rect(drw, 0, 0, mw, mh, 1, 1, 1, CPU_THREADS);
 
 	if (prompt && *prompt) {
 		drw_setscheme(drw, &scheme[SchemeSel]);
-		drw_text(drw, x, 0, promptw, bh, prompt, 0);
+		drw_text(drw, x, 0, promptw, bh, prompt, 0, CPU_THREADS);
 		x += promptw;
 	}
 	/* draw input field */
 	w = (lines > 0 || !matches) ? mw - x : inputw;
-	drw_setscheme(drw, &scheme[SchemeNorm]);
-	drw_text(drw, x, 0, w, bh, text, 0);
+	drw_setscheme(drw, &scheme[SchemeFirst]);
+	drw_text(drw, x, 0, w, bh, text, 0, CPU_THREADS);
 
 	if ((curpos = TEXTNW(text, cursor) + bh / 2 - 2) < w) {
 		drw_setscheme(drw, &scheme[SchemeNorm]);
-		drw_rect(drw, x + curpos + 2, 2, 1, bh - 4, 1, 1, 0);
+		drw_rect(drw, x + curpos + 2, 2, 1, bh - 4, 1, 1, 0, CPU_THREADS);
 	}
 
 	if (lines > 0) {
@@ -151,7 +151,7 @@ drawmenu(void)
 			else
 				drw_setscheme(drw, &scheme[SchemeNorm]);
 
-			drw_text(drw, x, y, w, bh, item->text, 0);
+			drw_text(drw, x, y, w, bh, item->text, 0, CPU_THREADS);
 		}
 	} else if (matches) {
 		/* draw horizontal list */
@@ -159,7 +159,7 @@ drawmenu(void)
 		w = TEXTW("<");
 		if (curr->left) {
 			drw_setscheme(drw, &scheme[SchemeNorm]);
-			drw_text(drw, x, 0, w, bh, "<", 0);
+			drw_text(drw, x, 0, w, bh, "<", 0, CPU_THREADS);
 		}
 		for (item = curr; item != next; item = item->right) {
 			x += w;
@@ -171,13 +171,13 @@ drawmenu(void)
 				drw_setscheme(drw, &scheme[SchemeOut]);
 			else
 				drw_setscheme(drw, &scheme[SchemeNorm]);
-			drw_text(drw, x, 0, w, bh, item->text, 0);
+			drw_text(drw, x, 0, w, bh, item->text, 0, CPU_THREADS);
 		}
 		w = TEXTW(">");
 		x = mw - w;
 		if (next) {
 			drw_setscheme(drw, &scheme[SchemeNorm]);
-			drw_text(drw, x, 0, w, bh, ">", 0);
+			drw_text(drw, x, 0, w, bh, ">", 0, CPU_THREADS);
 		}
 	}
 	drw_map(drw, win, 0, 0, mw, mh);
@@ -534,6 +534,8 @@ setup(void)
 #endif
 
 	/* init appearance */
+	scheme[SchemeFirst].bg = drw_clr_create(drw, firstbgcolor);
+	scheme[SchemeFirst].fg = drw_clr_create(drw, firstfgcolor);
 	scheme[SchemeNorm].bg = drw_clr_create(drw, normbgcolor);
 	scheme[SchemeNorm].fg = drw_clr_create(drw, normfgcolor);
 	scheme[SchemeSel].bg = drw_clr_create(drw, selbgcolor);
@@ -602,6 +604,9 @@ setup(void)
 	xic = XCreateIC(xim, XNInputStyle, XIMPreeditNothing | XIMStatusNothing,
 	                XNClientWindow, win, XNFocusWindow, win, NULL);
 
+	//take the screenshot and blur it before displaying the menu window
+	drw_takesblurcreenshot(drw, x, y, mw, mh, blurlevel, CPU_THREADS);
+	
 	XMapRaised(dpy, win);
 	drw_resize(drw, mw, mh);
 	drawmenu();
@@ -643,6 +648,10 @@ main(int argc, char *argv[])
 			prompt = argv[++i];
 		else if (!strcmp(argv[i], "-fn"))  /* font or font set */
 			fonts[0] = argv[++i];
+		else if (!strcmp(argv[i], "-fb"))  /* normal background color */
+			firstbgcolor = argv[++i];
+		else if (!strcmp(argv[i], "-ff"))  /* normal foreground color */
+			firstfgcolor = argv[++i];
 		else if (!strcmp(argv[i], "-nb"))  /* normal background color */
 			normbgcolor = argv[++i];
 		else if (!strcmp(argv[i], "-nf"))  /* normal foreground color */
