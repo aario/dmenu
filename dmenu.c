@@ -594,6 +594,7 @@ setup(void)
 	swa.override_redirect = True;
 	swa.background_pixel = scheme[SchemeNorm].bg->pix;
 	swa.event_mask = ExposureMask | KeyPressMask | VisibilityChangeMask;
+	drw_takesblurcreenshot(drw, x, y, mw, mh, blurlevel, CPU_THREADS);
 	win = XCreateWindow(dpy, root, x, y, mw, mh, 0,
 	                    DefaultDepth(dpy, screen), CopyFromParent,
 	                    DefaultVisual(dpy, screen),
@@ -605,7 +606,6 @@ setup(void)
 	                XNClientWindow, win, XNFocusWindow, win, NULL);
 
 	//take the screenshot and blur it before displaying the menu window
-	drw_takesblurcreenshot(drw, x, y, mw, mh, blurlevel, CPU_THREADS);
 	
 	XMapRaised(dpy, win);
 	drw_resize(drw, mw, mh);
