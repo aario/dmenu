@@ -14,6 +14,8 @@ Added Features
 * dmenu_vol    Displays volume percentages from 0 to 100% and sends it to amixer to set 'Master' channel
 * lines        Default value of lines in config.def.h is now set to 10. Originally it was 0.
 
+![Screenshot](screenshot.png?raw=true "Fully CPU Based No OpenGL Static Blur Effect")
+
 Requirements
 ------------
 In order to build dmenu you need the Xlib header files.
