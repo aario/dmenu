@@ -660,6 +660,8 @@ main(int argc, char *argv[])
 			selbgcolor = argv[++i];
 		else if (!strcmp(argv[i], "-sf"))  /* selected foreground color */
 			selfgcolor = argv[++i];
+		else if (!strcmp(argv[i], "-n"))   /* output selected number instead of text */
+			output_number = 1;
 		else
 			usage();
 
