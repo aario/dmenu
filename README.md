@@ -37,3 +37,13 @@ Afterwards enter the following command to build and install dmenu
 Running dmenu
 -------------
 See the man page for details.
+
+
+## THE STACK-BLUR PART OF THE CODE IS BASED ON GREATE WORK BY:
+Mario Klingemann <mario@quasimondo.com>
+
+Link to the original work:
+- http://incubator.quasimondo.com/processing/fast_blur_deluxe.php
+
+The original source code of stack-blur:
+- http://incubator.quasimondo.com/processing/stackblur.pde
