@@ -1,2 +1,12 @@
 #!/bin/bash
-{ echo "0%"; for i in {1..10}; do echo $i"0%"; done } | dmenu -l 0 -p "VOL:" "$@" | xargs amixer set Master
+vol_menu() {
+	current_vol=`amixer sget Master | grep % | head -1 | awk -F "[][]" '{print $2}' | cut -d % -f 1`
+	let "current_vol=$current_vol / 5"
+	{ echo "*"; for i in {1..19}; do echo "-"; done; echo "*"; } | dmenu -n -k -l 0 -p "VOL:" -d $current_vol "$@"
+}
+export -f vol_menu
+
+stdbuf -oL bash -c 'vol_menu' | while read -r line; do
+	let "vol = $line * 5"
+	amixer set Master $vol"%"
+done
