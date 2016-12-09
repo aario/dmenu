@@ -4,7 +4,7 @@
 #
 #Needs DBUS and a media player (VLC) to work
 media_menu() {
-	{ echo "|<<"; echo "[>||"; echo "[]"; echo ">>|"; } | dmenu -s -d 1 -l 0
+	{ echo " |<< "; echo " [>|| "; echo " [] "; echo " >>| "; } | dmenu -s -d 1 -l 0
 }
 export -f media_menu
 
