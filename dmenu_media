@@ -3,7 +3,7 @@
 #    https://gist.github.com/exic/1d051e3a15f61e06caf4
 #
 #Needs DBUS and a media player (VLC) to work
-command=`{ echo "[>||"; echo "|<<"; echo ">>|"; } | dmenu -l 0`
+command=`{ echo "|<<"; echo "[>||"; echo "[]"; echo ">>|"; } | dmenu -d 1 -l 0`
 name=`dbus-send --session --dest=org.freedesktop.DBus --type=method_call --print-reply /org/freedesktop/DBus org.freedesktop.DBus.ListNames | grep mpris | cut -d '"' -f 2`
 PATHS="$name /org/mpris/MediaPlayer2"
 DBUS_SEND="dbus-send --type=method_call --dest=$PATHS"
@@ -13,6 +13,8 @@ if [ "$command" = "|<<" ]; then
     $RC.Previous
 elif [ "$command" = "[>||" ]; then
     $RC.PlayPause
-elif [ "$command" = ">||" ]; then
+elif [ "$command" = ">>|" ]; then
     $RC.Next
+elif [ "$command" = "[]" ]; then
+    $RC.Stop
 fi
