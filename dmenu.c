@@ -443,12 +443,14 @@ keypress(XKeyEvent *ev)
 				printf("%d\n", sel->number);
 		} else
 			puts((sel && !(ev->state & ShiftMask)) ? sel->text : text);
-		if (!(ev->state & ControlMask)) {
-			cleanup();
-			exit(0);
+		if (!stay_after_select) {
+			if (!(ev->state & ControlMask)) {
+				cleanup();
+				exit(0);
+			}
+			if (sel)
+				sel->out = 1;
 		}
-		if (sel)
-			sel->out = 1;
 		break;
 	case XK_Right:
 		if (text[cursor] != '\0') {
@@ -662,7 +664,7 @@ usage(void)
 {
 	fputs("usage: dmenu [-b] [-f] [-i] [-l lines] [-p prompt] [-fn font] [-m monitor]\n"
 	      "             [-nb color] [-nf color] [-sb color] [-sf color] [-v] [-n]\n"
-	      "             [-d default item number] [-k] [-r]\n", stderr);
+	      "             [-d default item number] [-k] [-r] [-s]\n", stderr);
 	exit(1);
 }
 
@@ -689,6 +691,8 @@ main(int argc, char *argv[])
 			output_on_move = 1;
 		else if (!strcmp(argv[i], "-r"))   /* Reverse up down keys */
 			reverse_updown = 1;
+		else if (!strcmp(argv[i], "-s"))   /* Stay until Escape key pressed */
+			stay_after_select = 1;
 		else if (i + 1 == argc)
 			usage();
 		/* these options take one argument */
