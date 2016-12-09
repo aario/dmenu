@@ -25,6 +25,8 @@ static unsigned int output_number = 0;
 static unsigned int default_number = 0;
 /* keep sending selection to output on move */
 static unsigned int output_on_move = 0;
+/* Reverse up down keys */
+static unsigned int reverse_updown = 0;
 
 //Used for multi-threaded blur effect
 #define CPU_THREADS 4 
