@@ -597,6 +597,16 @@ setup(void)
 	promptw = (prompt && *prompt) ? TEXTW(prompt) : 0;
 	inputw = MIN(inputw, mw/3);
 	match();
+	if (default_number)
+		for (i = 0; i < default_number; i++) {
+			if (!sel->right)
+				break;
+			if (sel && (sel = sel->right) == next) {
+				printf("A\n");
+				curr = next;
+				calcoffsets();
+			}
+		}
 
 	/* create menu window */
 	swa.override_redirect = True;
@@ -670,6 +680,8 @@ main(int argc, char *argv[])
 			selbgcolor = argv[++i];
 		else if (!strcmp(argv[i], "-sf"))  /* selected foreground color */
 			selfgcolor = argv[++i];
+		else if (!strcmp(argv[i], "-d")) /* Default selected item number */
+			default_number = atoi(argv[++i]);
 		else
 			usage();
 
