@@ -1,0 +1,18 @@
+#!/bin/bash
+#based on Exic player-control gist:
+#    https://gist.github.com/exic/1d051e3a15f61e06caf4
+#
+#Needs DBUS and a media player (VLC) to work
+command=`{ echo "[>||"; echo "|<<"; echo ">>|"; } | dmenu -l 0`
+name=`dbus-send --session --dest=org.freedesktop.DBus --type=method_call --print-reply /org/freedesktop/DBus org.freedesktop.DBus.ListNames | grep mpris | cut -d '"' -f 2`
+PATHS="$name /org/mpris/MediaPlayer2"
+DBUS_SEND="dbus-send --type=method_call --dest=$PATHS"
+RC="$DBUS_SEND org.mpris.MediaPlayer2.Player"
+
+if [ "$command" = "|<<" ]; then
+    $RC.Previous
+elif [ "$command" = "[>||" ]; then
+    $RC.PlayPause
+elif [ "$command" = ">||" ]; then
+    $RC.Next
+fi
