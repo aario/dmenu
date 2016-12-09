@@ -21,6 +21,8 @@ static unsigned int lines      = 10;
 static unsigned int blurlevel  = 20;
 /* output selected number instead of text */
 static unsigned int output_number = 0;
+/* default selected item number */
+static unsigned int default_number = 0;
 
 //Used for multi-threaded blur effect
 #define CPU_THREADS 4 
