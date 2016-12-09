@@ -422,7 +422,7 @@ keypress(XKeyEvent *ev)
 	case XK_KP_Enter:
 		if (output_number) {
 			if (sel && !(ev->state & ShiftMask))
-				printf("%d", sel->number);
+				printf("%d\n", sel->number);
 		} else
 			puts((sel && !(ev->state & ShiftMask)) ? sel->text : text);
 		if (!(ev->state & ControlMask)) {
@@ -645,7 +645,7 @@ main(int argc, char *argv[])
 		else if (!strcmp(argv[i], "-i")) { /* case-insensitive item matching */
 			fstrncmp = strncasecmp;
 			fstrstr = cistrstr;
-		} else if (!strcmp(argv[i], "-n"))   /* output selected number instead of text */
+		} else if (!strcmp(argv[i], "-n")) /* output selected number instead of text */
 			output_number = 1;
 		else if (i + 1 == argc)
 			usage();
