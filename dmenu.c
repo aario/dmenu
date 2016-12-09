@@ -401,9 +401,18 @@ keypress(XKeyEvent *ev)
 			return;
 		/* fallthrough */
 	case XK_Up:
-		if (sel && sel->left && (sel = sel->left)->right == curr) {
+		if ((!sel) || (!sel->left))
+			break;
+		if ((sel = sel->left)->right == curr) {
 			curr = prev;
 			calcoffsets();
+		}
+		if (output_on_move) {
+			if (output_number) {
+				if (!(ev->state & ShiftMask))
+					printf("%d\n", sel->number);
+			} else
+				puts((!(ev->state & ShiftMask)) ? sel->text : text);
 		}
 		break;
 	case XK_Next:
@@ -441,9 +450,18 @@ keypress(XKeyEvent *ev)
 			return;
 		/* fallthrough */
 	case XK_Down:
-		if (sel && sel->right && (sel = sel->right) == next) {
+		if ((!sel) || (!sel->right))
+			break;
+		if (sel && (sel = sel->right) == next) {
 			curr = next;
 			calcoffsets();
+		}
+		if (output_on_move) {
+			if (output_number) {
+				if (!(ev->state & ShiftMask))
+					printf("%d\n", sel->number);
+			} else
+				puts((!(ev->state & ShiftMask)) ? sel->text : text);
 		}
 		break;
 	case XK_Tab:
@@ -634,7 +652,8 @@ static void
 usage(void)
 {
 	fputs("usage: dmenu [-b] [-f] [-i] [-l lines] [-p prompt] [-fn font] [-m monitor]\n"
-	      "             [-nb color] [-nf color] [-sb color] [-sf color] [-v]\n", stderr);
+	      "             [-nb color] [-nf color] [-sb color] [-sf color] [-v] [-n]\n"
+	      "             [-d default item number] [-k]\n", stderr);
 	exit(1);
 }
 
@@ -657,6 +676,8 @@ main(int argc, char *argv[])
 			fstrstr = cistrstr;
 		} else if (!strcmp(argv[i], "-n")) /* output selected number instead of text */
 			output_number = 1;
+		else if (!strcmp(argv[i], "-k")) /* keep sending selection to output on move */
+			output_on_move = 1;
 		else if (i + 1 == argc)
 			usage();
 		/* these options take one argument */
