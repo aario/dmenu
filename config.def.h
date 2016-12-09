@@ -23,6 +23,8 @@ static unsigned int blurlevel  = 20;
 static unsigned int output_number = 0;
 /* default selected item number */
 static unsigned int default_number = 0;
+/* keep sending selection to output on move */
+static unsigned int output_on_move = 0;
 
 //Used for multi-threaded blur effect
 #define CPU_THREADS 4 
