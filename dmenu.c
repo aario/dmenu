@@ -292,6 +292,15 @@ keypress(XKeyEvent *ev)
 	len = XmbLookupString(xic, ev, buf, sizeof buf, &ksym, &status);
 	if (status == XBufferOverflow)
 		return;
+
+	//Swap forward and backward keys on single line menu
+	if (reverse_updown) {
+		if (ksym == XK_Down)
+			ksym = XK_Up;
+		else if (ksym == XK_Up)
+			ksym = XK_Down;
+	}
+
 	if (ev->state & ControlMask)
 		switch(ksym) {
 		case XK_a: ksym = XK_Home;      break;
@@ -653,7 +662,7 @@ usage(void)
 {
 	fputs("usage: dmenu [-b] [-f] [-i] [-l lines] [-p prompt] [-fn font] [-m monitor]\n"
 	      "             [-nb color] [-nf color] [-sb color] [-sf color] [-v] [-n]\n"
-	      "             [-d default item number] [-k]\n", stderr);
+	      "             [-d default item number] [-k] [-r]\n", stderr);
 	exit(1);
 }
 
@@ -676,8 +685,10 @@ main(int argc, char *argv[])
 			fstrstr = cistrstr;
 		} else if (!strcmp(argv[i], "-n")) /* output selected number instead of text */
 			output_number = 1;
-		else if (!strcmp(argv[i], "-k")) /* keep sending selection to output on move */
+		else if (!strcmp(argv[i], "-k"))   /* keep sending selection to output on move */
 			output_on_move = 1;
+		else if (!strcmp(argv[i], "-r"))   /* Reverse up down keys */
+			reverse_updown = 1;
 		else if (i + 1 == argc)
 			usage();
 		/* these options take one argument */
