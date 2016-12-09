@@ -20,7 +20,7 @@ static unsigned int lines      = 10;
 /* intensity of blur level*/
 static unsigned int blurlevel  = 20;
 /* output selected number instead of text */
-static unsigned in output_number = 0;
+static unsigned int output_number = 0;
 
 //Used for multi-threaded blur effect
 #define CPU_THREADS 4 

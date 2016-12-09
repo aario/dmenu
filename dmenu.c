@@ -422,7 +422,7 @@ keypress(XKeyEvent *ev)
 	case XK_KP_Enter:
 		if (output_number) {
 			if (sel && !(ev->state & ShiftMask))
-				puts(sel->number);
+				printf("%d", sel->number);
 		} else
 			puts((sel && !(ev->state & ShiftMask)) ? sel->text : text);
 		if (!(ev->state & ControlMask)) {
@@ -645,7 +645,9 @@ main(int argc, char *argv[])
 		else if (!strcmp(argv[i], "-i")) { /* case-insensitive item matching */
 			fstrncmp = strncasecmp;
 			fstrstr = cistrstr;
-		} else if (i + 1 == argc)
+		} else if (!strcmp(argv[i], "-n"))   /* output selected number instead of text */
+			output_number = 1;
+		else if (i + 1 == argc)
 			usage();
 		/* these options take one argument */
 		else if (!strcmp(argv[i], "-l"))   /* number of lines in vertical list */
@@ -668,8 +670,6 @@ main(int argc, char *argv[])
 			selbgcolor = argv[++i];
 		else if (!strcmp(argv[i], "-sf"))  /* selected foreground color */
 			selfgcolor = argv[++i];
-		else if (!strcmp(argv[i], "-n"))   /* output selected number instead of text */
-			output_number = 1;
 		else
 			usage();
 
