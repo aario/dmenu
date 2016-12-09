@@ -1,2 +1,16 @@
 #!/bin/bash
-hostnamec=`hostname | wc -c`; let "column=14+$hostnamec"; wmctrl -l | colrm 1 $column | dmenu -i "$@" | xargs -I {} -i wmctrl -a "{}"
+hostnamec=`hostname | wc -c`
+let "column=14+$hostnamec"
+#wmctrl -l | colrm 1 $column | dmenu -i "$@" | xargs -I {} -i wmctrl -a "{}"
+eval 'window_ids=($(wmctrl -l | cut -d " " -f1))'
+#!/bin/bash
+win_menu() {
+	hostnamec=`hostname | wc -c`
+	let "column=14+$hostnamec"
+	wmctrl -l | colrm 1 $column | dmenu -n -k -i "$@"
+}
+export -f win_menu
+
+stdbuf -oL bash -c 'win_menu' | while read -r line; do
+	wmctrl -i -a ${window_ids[$line]}
+done
