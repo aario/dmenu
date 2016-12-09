@@ -32,6 +32,7 @@ struct item {
 	char *text;
 	struct item *left, *right;
 	int out;
+	int number;
 };
 
 static char text[BUFSIZ] = "";
@@ -60,13 +61,16 @@ static char *(*fstrstr)(const char *, const char *) = strstr;
 static void
 appenditem(struct item *item, struct item **list, struct item **last)
 {
-	if (*last)
+	int number = 0;
+	if (*last) {
 		(*last)->right = item;
-	else
+		number = (*last)->number+1;
+	} else
 		*list = item;
 
 	item->left = *last;
 	item->right = NULL;
+	item->number = number;
 	*last = item;
 }
 
@@ -416,7 +420,11 @@ keypress(XKeyEvent *ev)
 		break;
 	case XK_Return:
 	case XK_KP_Enter:
-		puts((sel && !(ev->state & ShiftMask)) ? sel->text : text);
+		if (output_number) {
+			if (sel && !(ev->state & ShiftMask))
+				puts(sel->number);
+		} else
+			puts((sel && !(ev->state & ShiftMask)) ? sel->text : text);
 		if (!(ev->state & ControlMask)) {
 			cleanup();
 			exit(0);
