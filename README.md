@@ -12,6 +12,7 @@ Added Features
 * Blur Effect  A fast and nice blur effect. Does not need OpenGL and is all CPU based.
 * dmenu_win    Displays a list of window titles instead of commands and then switches to selected window
 * dmenu_vol    Displays volume percentages from 0 to 100% and sends it to amixer to set 'Master' channel
+* dmenu_media  Sends media player commands! Play/Pause, Previous, Next, etc.
 * lines        Default value of lines in config.def.h is now set to 10. Originally it was 0.
 
 ![Screenshot](screenshot.png?raw=true "Fully CPU Based No OpenGL Static Blur Effect")
