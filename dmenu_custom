@@ -9,4 +9,4 @@ if [ `find ./ -type f | wc -l` == "0" ]; then #empty folder
 	exit;
 fi
 
-find ./ -type f | cut -d '/' -f 2- | dmenu $@ | xargs bash
+find ./ -type f | cut -d '/' -f 2- | sort | dmenu $@ | xargs bash
