@@ -53,6 +53,8 @@ static XIC xic;
 static ClrScheme scheme[SchemeLast];
 static Drw *drw;
 
+static int last_key_press_time;
+
 #include "config.h"
 
 static int (*fstrncmp)(const char *, const char *, size_t) = strncmp;
@@ -288,6 +290,7 @@ keypress(XKeyEvent *ev)
 	int len;
 	KeySym ksym = NoSymbol;
 	Status status;
+	last_key_press_time = time();
 
 	len = XmbLookupString(xic, ev, buf, sizeof buf, &ksym, &status);
 	if (status == XBufferOverflow)

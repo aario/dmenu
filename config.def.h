@@ -29,6 +29,8 @@ static unsigned int output_on_move = 0;
 static unsigned int reverse_updown = 0;
 /* Stay until Escape key pressed */
 static unsigned int stay_after_select = 0;
+/* Stay timeout seconds */
+static unsigned int stay_timeout = 10;
 
 //Used for multi-threaded blur effect
 #define CPU_THREADS 4 
