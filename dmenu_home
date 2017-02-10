@@ -1,0 +1,15 @@
+#!/bin/bash
+#Runs a custom menu of all the sell scripts saved in $HOME/.dwm/custom_scripts
+
+cd "$HOME"
+while [ 1 ]; do
+	file=`( echo ../; find ./ -maxdepth 1 -type d | grep -v '^./$' | cut -d '/' -f2- | sort | awk '{print $0"/"}'; find ./ -maxdepth 1 -type f | cut -d '/' -f2- | sort ) | grep -v '^\.[^.]' | dmenu $@`
+	if [ -d "$file" ]; then
+		cd "$file"
+	elif [ -f "$file" ]; then
+		nohup xdg-open "$file" &
+		break
+	else
+		break
+	fi
+done
