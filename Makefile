@@ -40,7 +40,7 @@ dist: clean
 	@echo creating dist tarball
 	@mkdir -p dmenu-${VERSION}
 	@cp LICENSE Makefile README arg.h config.def.h config.mk dmenu.1 \
-		drw.h util.h dmenu_path dmenu_run dmenu_win dmenu_vol dmenu_media dmenu_custom stest.1 ${SRC} \
+		drw.h util.h dmenu_path dmenu_run dmenu_win dmenu_vol dmenu_media dmenu_custom dmenu_home stest.1 ${SRC} \
 		dmenu-${VERSION}
 	@tar -cf dmenu-${VERSION}.tar dmenu-${VERSION}
 	@gzip dmenu-${VERSION}.tar
@@ -49,7 +49,7 @@ dist: clean
 install: all
 	@echo installing executables to ${DESTDIR}${PREFIX}/bin
 	@mkdir -p ${DESTDIR}${PREFIX}/bin
-	@cp -f dmenu dmenu_path dmenu_run dmenu_win dmenu_vol dmenu_media dmenu_custom stest ${DESTDIR}${PREFIX}/bin
+	@cp -f dmenu dmenu_path dmenu_run dmenu_win dmenu_vol dmenu_media dmenu_custom dmenu_home stest ${DESTDIR}${PREFIX}/bin
 	@chmod 755 ${DESTDIR}${PREFIX}/bin/dmenu
 	@chmod 755 ${DESTDIR}${PREFIX}/bin/dmenu_path
 	@chmod 755 ${DESTDIR}${PREFIX}/bin/dmenu_run
