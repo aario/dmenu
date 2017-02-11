@@ -3,7 +3,7 @@
 
 cd "$HOME"
 while [ 1 ]; do
-	file=`( echo ../; find ./ -maxdepth 1 -type d | grep -v '^./$' | cut -d '/' -f2- | sort | awk '{print $0"/"}'; find ./ -maxdepth 1 -type f | cut -d '/' -f2- | sort ) | grep -v '^\.[^.]' | dmenu $@`
+	file=`( echo ../; find ./ -maxdepth 1 -type d | grep -v '^./$' | cut -d '/' -f2- | sort | awk '{print $0"/"}'; find ./ -maxdepth 1 -type f | cut -d '/' -f2- | sort ) | grep -v '^\.[^.]' | dmenu -i $@`
 	if [ -d "$file" ]; then
 		cd "$file"
 	elif [ -f "$file" ]; then
