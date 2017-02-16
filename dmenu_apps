@@ -1,0 +1,19 @@
+#!/bin/bash
+DESKTOP_PATHS="/usr/share/applications/*.desktop /usr/local/share/applications/*.desktop"
+
+function exit_on_empty() {
+  if [ "x$1" == "x" ]; then
+    exit
+  fi
+}
+
+category=`find /usr/share/applications/ $DESKTOP_PATHS -iname *.desktop | xargs grep 'Categories=' | cut -d '=' -f2 | tr ';' '\n' | cut -d ';' -f2 | sort | uniq | dmenu $@ -i`
+exit_on_empty "$category"
+
+name=`grep -H -R '^Name[=]\|^Categories[=]' $DESKTOP_PATHS | grep $category | cut -d ':' -f1 | xargs grep -m 1 '^Name=' | cut -d '=' -f2 | sort | uniq | dmenu $@ -i`
+exit_on_empty "$name"
+ 
+exec=`grep -H -R -m 1 '^Name='"$name"'$' $DESKTOP_PATHS | cut -d ':' -f1 | xargs grep -m1 '^Exec=' | cut -d '=' -f2 | cut -d '%' -f1 | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' | head -1`
+exit_on_empty "$exec"
+
+nohup $exec &
