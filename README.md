@@ -15,6 +15,7 @@ Added Features
 * dmenu_media  Sends media player commands! Play/Pause, Previous, Next, etc.
 * dmenu_custom Displays of a list of custom scripts located in $HOME/.dwm/custom_scripts
 * dmenu_home   Browses through home folder and opens files
+* dmenu_apps   Browses through applications menu and launches apps
 * lines        Default value of lines in config.def.h is now set to 10. Originally it was 0.
 
 ![Screenshot](screenshot.png?raw=true "Fully CPU Based No OpenGL Static Blur Effect")
