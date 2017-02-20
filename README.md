@@ -12,6 +12,7 @@ Added Features
 * Blur Effect  A fast and nice blur effect. Does not need OpenGL and is all CPU based.
 * dmenu_win    Displays a list of window titles instead of commands and then switches to selected window
 * dmenu_vol    Displays volume percentages from 0 to 100% and sends it to amixer to set 'Master' channel
+* dmenu_bl     Displays brightness percentages from 0 to 100% and sends it to xbacklight to set it
 * dmenu_media  Sends media player commands! Play/Pause, Previous, Next, etc.
 * dmenu_custom Displays of a list of custom scripts located in $HOME/.dwm/custom_scripts
 * dmenu_home   Browses through home folder and opens files
@@ -25,6 +26,7 @@ Requirements
 In order to build dmenu you need the Xlib header files.
 In order to run dmenu_win you need wmctrl utility installed.
 In order to run dmenu_vol you need alsa_utils installed.
+In order to run dmenu_bl you need xbacklight installed.
 
 
 Installation
