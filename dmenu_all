@@ -1,10 +1,18 @@
 #!/bin/bash
 ITEMS=('BIN (Meta+P)' 'Applications (Meta+Escape)' 'Custom Scripts (Meta+C)' 'Switch Window List (Meta+W)' 'Adjust Volume (Meta+V' 'Adjust Brightness (Meta+B)' 'Control Media Player (Meta+N)' 'Browse Home Folder (Meta+H)')
-COMMANDS=('dmenu_run' 'dmenu_apps' 'dmenu_custom' 'dmenu_win' 'dmenu_vol' 'dmenu_bl' 'dmenu_media' 'dmenu_home')
+DMENU_COMMANDS=('dmenu_run' 'dmenu_apps' 'dmenu_custom' 'dmenu_win' 'dmenu_vol' 'dmenu_bl' 'dmenu_media' 'dmenu_home')
 count=${#ITEMS[@]}
 let "top=$count-1"
 indexes=`seq 0 $top`
-command_index=`for i in $indexes; do echo ${ITEMS[i]}; done | dmenu -n $@`
-if [ "x$command_index" != "x" ]; then
-	bash ${COMMANDS[command_index]} $@
+item=`for i in $indexes; do echo ${ITEMS[i]}; done | dmenu -i $@`
+dmenu_command="x"
+for i in $indexes; do
+	if [ "$item" == "${ITEMS[i]}" ]; then
+		dmenu_command=${DMENU_COMMANDS[i]}
+		break
+	fi
+done
+
+if [ "$dmenu_command" != "x" ]; then
+	bash $dmenu_command $@
 fi
