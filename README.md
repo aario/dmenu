@@ -18,6 +18,7 @@ Added Features
 * dmenu_home   Browses through home folder and opens files
 * dmenu_apps   Browses through applications menu and launches apps
 * lines        Default value of lines in config.def.h is now set to 10. Originally it was 0.
+* Works best with my fork of dwm
 
 ![Screenshot](screenshot.png?raw=true "Fully CPU Based No OpenGL Static Blur Effect")
 
