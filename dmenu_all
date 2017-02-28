@@ -3,16 +3,23 @@ ITEMS=('BIN (Meta+P)' 'Applications (Meta+Escape)' 'Custom Scripts (Meta+C)' 'Sw
 DMENU_COMMANDS=('dmenu_run' 'dmenu_apps' 'dmenu_custom' 'dmenu_win' 'dmenu_vol' 'dmenu_bl' 'dmenu_media' 'dmenu_home')
 count=${#ITEMS[@]}
 let "top=$count-1"
-indexes=`seq 0 $top`
-item=`for i in $indexes; do echo ${ITEMS[i]}; done | dmenu -i $@`
-dmenu_command="x"
-for i in $indexes; do
-	if [ "$item" == "${ITEMS[i]}" ]; then
-		dmenu_command=${DMENU_COMMANDS[i]}
-		break
+while [ 1 ]; do
+	indexes=`seq 0 $top`
+	item=`for i in $indexes; do echo ${ITEMS[i]}; done | dmenu -i $@`
+	dmenu_command="x"
+	for i in $indexes; do
+		if [ "$item" == "${ITEMS[i]}" ]; then
+			dmenu_command=${DMENU_COMMANDS[i]}
+			break
+		fi
+	done
+
+	if [ "$dmenu_command" == "x" ]; then
+		break;
+	fi
+	$dmenu_command $@
+	exit_code=$?
+	if [ $exit_code -eq 0 ]; then
+		break;
 	fi
 done
-
-if [ "$dmenu_command" != "x" ]; then
-	bash $dmenu_command $@
-fi

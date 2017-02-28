@@ -30,3 +30,5 @@ stdbuf -oL bash -c 'media_menu' | while read -r command; do
 		$RC.Stop
 	fi
 done
+
+exit 1
