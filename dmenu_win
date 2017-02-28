@@ -1,2 +1,9 @@
 #!/bin/bash
-hostnamec=`hostname | wc -c`; let "column=14+$hostnamec"; wmctrl -l | colrm 1 $column | dmenu -i "$@" | xargs -I {} -i wmctrl -a "{}"
+hostnamec=`hostname | wc -c`
+let "column=14+$hostnamec"
+win=`wmctrl -l | colrm 1 $column | dmenu -i "$@"`
+if [ "x$win" == "x" ]; then
+  exit 1
+fi
+wmctrl -a "$win"
+exit 0

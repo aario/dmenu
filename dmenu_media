@@ -10,9 +10,10 @@ media_menu() {
 		title=`echo "$title" | cut -c 1-47`
 		title="$title..."
 	fi
-	{ echo " |<< "; echo " [>|| "; echo " [] "; echo " >>| "; } | dmenu -p "$title" -s -d 1 -l 0
+	{ echo " |<< "; echo " [>|| "; echo " [] "; echo " >>| "; } | dmenu -p "$title" -s -d 1 -l 0 $menu_params
 }
 export -f media_menu
+export menu_params="$@"
 
 stdbuf -oL bash -c 'media_menu' | while read -r command; do
 	name=`dbus-send --session --dest=org.freedesktop.DBus --type=method_call --print-reply /org/freedesktop/DBus org.freedesktop.DBus.ListNames | grep mpris | cut -d '"' -f 2`
@@ -30,3 +31,5 @@ stdbuf -oL bash -c 'media_menu' | while read -r command; do
 		$RC.Stop
 	fi
 done
+
+exit 1

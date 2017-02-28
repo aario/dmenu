@@ -2,11 +2,13 @@
 bl_menu() {
 	current_bl=`xbacklight | cut -d '.' -f 1`
 	let "current_bl=$current_bl / 5"
-	{ echo "*"; for i in {1..19}; do echo "-"; done; echo "*"; } | dmenu -r -n -k -l 0 -p "BRIGHTNESS:" -d $current_bl "$@"
+	{ echo "*"; for i in {1..19}; do echo "-"; done; echo "*"; } | dmenu -r -n -k -l 0 -p "BRIGHTNESS:" -d $current_bl $menu_params
 }
 export -f bl_menu
+export menu_params="$@"
 
 stdbuf -oL bash -c 'bl_menu' | while read -r line; do
 	let "bl = $line * 5"
 	xbacklight -set $bl
 done
+exit 1
