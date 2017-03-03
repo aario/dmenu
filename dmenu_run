@@ -1,7 +1,16 @@
 #!/bin/bash
-bin=`dmenu_path | dmenu "$@"`
+HISTORY_PATH="$HOME/.dwm/dmenu_run_history"
+bin=` \
+  (dmenu_path; cat "$HISTORY_PATH") | \
+  sort -r | \
+  uniq -c | \
+  awk '{printf("%d %s\n", $1 * 1000000 + NR, $2)}' | \
+  sort -n -r | \
+  awk '{print $NF}' | \
+  dmenu "$@"`
 if [ "x$bin" == "x" ]; then
   exit 1
 fi
+echo $bin >> "$HISTORY_PATH"
 echo $bin | ${SHELL:-"/bin/sh"} &
 exit 0

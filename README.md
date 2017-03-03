@@ -11,6 +11,7 @@ Added Features
 --------------
 * Blur Effect  A fast and nice blur effect. Does not need OpenGL and is all CPU based.
 * Meta Key     Meta Key/Super Key closes the menu
+* dmenu_run    Now sorts applications by most executed
 * dmenu_win    Displays a list of window titles instead of commands and then switches to selected window
 * dmenu_vol    Displays volume percentages from 0 to 100% and sends it to amixer to set 'Master' channel
 * dmenu_bl     Displays brightness percentages from 0 to 100% and sends it to xbacklight to set it
