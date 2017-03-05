@@ -1,14 +1,53 @@
 #!/bin/bash
+
+function get_volume() {
+	amixer sget Master | grep % | head -1 | awk -F "[][]" '{print $2}' | cut -d % -f 1
+}
+
+function set_volume() {
+	amixer set Master $1"%"
+}
+
+if [ $# -eq 1 ]; then
+	current_vol=`get_volume`
+	if [ $1 == '--volumedown' ]; then
+		if [ $current_vol -gt 9 ]; then
+			let "vol=$current_vol - 10"
+		else
+			vol=0
+		fi
+		set_volume $vol
+		exit 0
+	fi
+
+	if [ $1 == '--volumeup' ]; then
+		if [ $current_vol -lt 91 ]; then
+			let "vol=$current_vol + 10"
+		else
+			vol=100
+		fi
+		set_volume $vol
+		exit 0
+	fi
+
+	if [ $1 == '--mute' ]; then
+		set_volume 0
+		exit 0
+	fi
+fi
+
 vol_menu() {
-	current_vol=`amixer sget Master | grep % | head -1 | awk -F "[][]" '{print $2}' | cut -d % -f 1`
+	current_vol=`get_volume`
 	let "current_vol=$current_vol / 5"
 	{ echo "*"; for i in {1..19}; do echo "-"; done; echo "*"; } | dmenu -r -n -k -l 0 -p "VOL:" -d $current_vol $menu_params
 }
+
+export -f get_volume
 export -f vol_menu
 export menu_params="$@"
 
 stdbuf -oL bash -c 'vol_menu' | while read -r line; do
 	let "vol = $line * 5"
-	amixer set Master $vol"%"
+	set_volume $vol
 done
 exit 1

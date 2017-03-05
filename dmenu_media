@@ -3,6 +3,35 @@
 #    https://gist.github.com/exic/1d051e3a15f61e06caf4
 #
 #Needs DBUS and a media player (VLC) to work
+
+name=`dbus-send --session --dest=org.freedesktop.DBus --type=method_call --print-reply /org/freedesktop/DBus org.freedesktop.DBus.ListNames | grep mpris | cut -d '"' -f 2`
+PATHS="$name /org/mpris/MediaPlayer2"
+DBUS_SEND="dbus-send --type=method_call --dest=$PATHS"
+RC="$DBUS_SEND org.mpris.MediaPlayer2.Player"
+
+if [ $# -eq 1 ]; then
+	if [ $1 == '--playpause' ]; then
+		$RC.PlayPause
+		exit 0
+	fi
+
+	if [ $1 == '--stop' ]; then
+		$RC.Stop
+		set_volume $vol
+		exit 0
+	fi
+
+	if [ $1 == '--previous' ]; then
+		$RC.Previous
+		exit 0
+	fi
+
+	if [ $1 == '--next' ]; then
+		$RC.Next
+		exit 0
+	fi
+fi
+
 media_menu() {
 	name=`dbus-send --session --dest=org.freedesktop.DBus --type=method_call --print-reply /org/freedesktop/DBus org.freedesktop.DBus.ListNames | grep mpris | cut -d '"' -f 2`
 	title=`dbus-send --print-reply --session --dest=$name /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'Metadata' | grep -A 1 title | grep variant | cut -d '"' -f2`
@@ -16,11 +45,6 @@ export -f media_menu
 export menu_params="$@"
 
 stdbuf -oL bash -c 'media_menu' | while read -r command; do
-	name=`dbus-send --session --dest=org.freedesktop.DBus --type=method_call --print-reply /org/freedesktop/DBus org.freedesktop.DBus.ListNames | grep mpris | cut -d '"' -f 2`
-	PATHS="$name /org/mpris/MediaPlayer2"
-	DBUS_SEND="dbus-send --type=method_call --dest=$PATHS"
-	RC="$DBUS_SEND org.mpris.MediaPlayer2.Player"
-
 	if [ "$command" = "|<<" ]; then
 		$RC.Previous
 	elif [ "$command" = "[>||" ]; then
