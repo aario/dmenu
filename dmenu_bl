@@ -1,9 +1,35 @@
 #!/bin/bash
+function get_backlight() {
+	xbacklight | cut -d '.' -f 1
+}
+
+function set_backlight() {
+	xbacklight -set $1
+}
+
+function change_backlight() {
+	xbacklight -time 0 $@
+}
+
 bl_menu() {
-	current_bl=`xbacklight | cut -d '.' -f 1`
+	current_bl=`get_backlight`
 	let "current_bl=$current_bl / 5"
 	{ echo "*"; for i in {1..19}; do echo "-"; done; echo "*"; } | dmenu -r -n -k -l 0 -p "BRIGHTNESS:" -d $current_bl $menu_params
 }
+
+if [ $# -eq 1 ]; then
+	if [ $1 == '--backlightdown' ]; then
+		change_backlight -dec 10
+		exit 0
+	fi
+
+	if [ $1 == '--backlightup' ]; then
+		change_backlight -inc 10
+		exit 0
+	fi
+fi
+
+export -f get_backlight
 export -f bl_menu
 export menu_params="$@"
 
