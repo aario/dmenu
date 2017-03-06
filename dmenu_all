@@ -1,5 +1,5 @@
 #!/bin/bash
-ITEMS=('BIN (Meta+P)' 'Applications (Meta+Escape)' 'Custom Scripts (Meta+C)' 'Switch Window List (Meta+W)' 'Adjust Volume (Meta+V' 'Adjust Brightness (Meta+B)' 'Control Media Player (Meta+N)' 'Browse Home Folder (Meta+H)')
+ITEMS=('BIN (Meta+P)' 'Applications (Meta+Escape)' 'Custom Scripts (Meta+C)' 'Switch Window List (Meta+W)' 'Adjust Volume (Meta+V' 'Adjust Brightness (Meta+B)' 'Control Media Player (Meta+M)' 'Browse Home Folder (Meta+H)')
 DMENU_COMMANDS=('dmenu_run' 'dmenu_apps' 'dmenu_custom' 'dmenu_win' 'dmenu_vol' 'dmenu_bl' 'dmenu_media' 'dmenu_home')
 count=${#ITEMS[@]}
 let "top=$count-1"
