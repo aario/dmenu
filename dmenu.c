@@ -307,6 +307,60 @@ nextrune(int inc)
 }
 
 static void
+goup(unsigned int state)
+{
+	if ((!sel) || (!sel->left))
+		return;
+	if ((sel = sel->left)->right == curr) {
+		curr = prev;
+		calcoffsets();
+	}
+	if (output_on_move) {
+		if (output_number) {
+			if (!(state & ShiftMask))
+				printf("%d\n", sel->number);
+		} else
+			puts((!(state & ShiftMask)) ? sel->text : text);
+	}
+}
+
+static void
+godown(unsigned int state)
+{
+	if ((!sel) || (!sel->right))
+		return;
+	if (sel && (sel = sel->right) == next) {
+		curr = next;
+		calcoffsets();
+	}
+	if (output_on_move) {
+		if (output_number) {
+			if (!(state & ShiftMask))
+				printf("%d\n", sel->number);
+		} else
+			puts((!(state & ShiftMask)) ? sel->text : text);
+	}
+}
+
+static void
+choose(unsigned int state)
+{
+	if (output_number) {
+		if (sel && !(state & ShiftMask))
+			printf("%d\n", sel->number);
+	} else
+		puts((sel && !(state & ShiftMask)) ? sel->text : text);
+	if (!stay_after_select) {
+		if (!(state & ControlMask)) {
+			cleanup();
+			exit(0);
+		}
+		if (sel)
+			sel->out = 1;
+	}
+}
+
+static void
 keypress(XKeyEvent *ev)
 {
 	char buf[32];
@@ -436,19 +490,7 @@ keypress(XKeyEvent *ev)
 			return;
 		/* fallthrough */
 	case XK_Up:
-		if ((!sel) || (!sel->left))
-			break;
-		if ((sel = sel->left)->right == curr) {
-			curr = prev;
-			calcoffsets();
-		}
-		if (output_on_move) {
-			if (output_number) {
-				if (!(ev->state & ShiftMask))
-					printf("%d\n", sel->number);
-			} else
-				puts((!(ev->state & ShiftMask)) ? sel->text : text);
-		}
+		goup(ev->state);
 		break;
 	case XK_Next:
 		if (!next)
@@ -464,19 +506,7 @@ keypress(XKeyEvent *ev)
 		break;
 	case XK_Return:
 	case XK_KP_Enter:
-		if (output_number) {
-			if (sel && !(ev->state & ShiftMask))
-				printf("%d\n", sel->number);
-		} else
-			puts((sel && !(ev->state & ShiftMask)) ? sel->text : text);
-		if (!stay_after_select) {
-			if (!(ev->state & ControlMask)) {
-				cleanup();
-				exit(0);
-			}
-			if (sel)
-				sel->out = 1;
-		}
+		choose(ev->state);
 		break;
 	case XK_Right:
 		if (text[cursor] != '\0') {
@@ -487,19 +517,7 @@ keypress(XKeyEvent *ev)
 			return;
 		/* fallthrough */
 	case XK_Down:
-		if ((!sel) || (!sel->right))
-			break;
-		if (sel && (sel = sel->right) == next) {
-			curr = next;
-			calcoffsets();
-		}
-		if (output_on_move) {
-			if (output_number) {
-				if (!(ev->state & ShiftMask))
-					printf("%d\n", sel->number);
-			} else
-				puts((!(ev->state & ShiftMask)) ? sel->text : text);
-		}
+		godown(ev->state);
 		break;
 	case XK_Tab:
 		if (!sel)
@@ -552,22 +570,18 @@ buttonpress(XEvent *e)
 		return;
 	}
 	/* scroll up */
-	if (ev->button == Button4 && prev) {
-		sel = curr = prev;
-		calcoffsets();
+	if (ev->button == Button4) {
+		goup(ev->state);
 		drawmenu();
 		return;
 	}
 	/* scroll down */
-	if (ev->button == Button5 && next) {
-		sel = curr = next;
-		calcoffsets();
+	if (ev->button == Button5) {
+		godown(ev->state);
 		drawmenu();
 		return;
 	}
 	if (ev->button != Button1)
-		return;
-	if (ev->state & ~ControlMask)
 		return;
 	if (lines > 0) {
 		/* vertical list: (ctrl)left-click on item */
@@ -575,14 +589,9 @@ buttonpress(XEvent *e)
 		for (item = curr; item != next; item = item->right) {
 			y += h;
 			if (ev->y >= y && ev->y <= (y + h)) {
-				puts(item->text);
-				if (!(ev->state & ControlMask))
-					exit(0);
 				sel = item;
-				if (sel) {
-					sel->out = 1;
-					drawmenu();
-				}
+				choose(ev->state);
+				drawmenu();
 				return;
 			}
 		}
@@ -603,14 +612,9 @@ buttonpress(XEvent *e)
 			x += w;
 			w = MIN(TEXTW(item->text), mw - x - TEXTW(">"));
 			if (ev->x >= x && ev->x <= x + w) {
-				puts(item->text);
-				if (!(ev->state & ControlMask))
-					exit(0);
 				sel = item;
-				if (sel) {
-					sel->out = 1;
-					drawmenu();
-				}
+				choose(ev->state);
+				drawmenu();
 				return;
 			}
 		}
