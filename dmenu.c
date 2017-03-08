@@ -204,60 +204,6 @@ grabkeyboard(void)
 	die("cannot grab keyboard\n");
 }
 
-static void
-match(void)
-{
-	static char **tokv = NULL;
-	static int tokn = 0;
-
-	char buf[sizeof text], *s;
-	int i, tokc = 0;
-	size_t len, textsize;
-	struct item *item, *lprefix, *lsubstr, *prefixend, *substrend;
-
-	strcpy(buf, text);
-	/* separate input text into tokens to be matched individually */
-	for (s = strtok(buf, " "); s; tokv[tokc - 1] = s, s = strtok(NULL, " "))
-		if (++tokc > tokn && !(tokv = realloc(tokv, ++tokn * sizeof *tokv)))
-			die("cannot realloc %u bytes\n", tokn * sizeof *tokv);
-	len = tokc ? strlen(tokv[0]) : 0;
-
-	matches = lprefix = lsubstr = matchend = prefixend = substrend = NULL;
-	textsize = strlen(text);
-	for (item = items; item && item->text; item++) {
-		for (i = 0; i < tokc; i++)
-			if (!fstrstr(item->text, tokv[i]))
-				break;
-		if (i != tokc) /* not all tokens match */
-			continue;
-		/* exact matches go first, then prefixes, then substrings */
-		if (!tokc || !fstrncmp(text, item->text, textsize))
-			appenditem(item, &matches, &matchend);
-		else if (!fstrncmp(tokv[0], item->text, len))
-			appenditem(item, &lprefix, &prefixend);
-		else
-			appenditem(item, &lsubstr, &substrend);
-	}
-	if (lprefix) {
-		if (matches) {
-			matchend->right = lprefix;
-			lprefix->left = matchend;
-		} else
-			matches = lprefix;
-		matchend = prefixend;
-	}
-	if (lsubstr) {
-		if (matches) {
-			matchend->right = lsubstr;
-			lsubstr->left = matchend;
-		} else
-			matches = lsubstr;
-		matchend = substrend;
-	}
-	curr = sel = matches;
-	calcoffsets();
-}
-
 static int
 compare_distance(const void *a, const void *b)
 {
