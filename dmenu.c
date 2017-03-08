@@ -545,6 +545,14 @@ buttonpress(XEvent *e)
 	if (ev->button == Button3)
 		exit(1);
 
+	//Swap forward and backward keys on single line menu
+	if (reverse_updown) {
+		if (ev->button == Button4)
+			ev->button = Button5;
+		else if (ev->button == Button5)
+			ev->button = Button4;
+	}
+
 	if (prompt && *prompt)
 		x += promptw;
 
