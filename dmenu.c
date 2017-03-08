@@ -236,8 +236,8 @@ fuzzymatch(void)
 			sidx = eidx = -1;
 			/* walk through item text */
 			for (i = 0; i < itext_len && (c = item->text[i]); i++) {
-				/* fuzzy match pattern */
-				if (text[pidx] == c) {
+				/* case-insensitive fuzzy match pattern */
+				if (tolower(text[pidx]) == c || toupper(text[pidx]) == c) {
 					if (sidx == -1)
 						sidx = i;
 					pidx++;
