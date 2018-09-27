@@ -14,5 +14,5 @@ script=`find ./ -type f | cut -d '/' -f 2- | sort | dmenu $@`
 if [ "x$script" == "x" ]; then
   exit 1
 fi
-$SHELL $script
+./"$script"
 exit $?
